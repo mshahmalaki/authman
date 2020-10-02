@@ -1,3 +1,4 @@
+from flask import abort
 from flask_restx import Resource
 from authman.controller import UserController
 
@@ -10,7 +11,10 @@ class UserResource(Resource):
             pass
 
     def post(self, user_id=None):
-        pass
+        if user_id is None:
+            return UserController.create_user()
+        else:
+            abort(405)
 
     def patch(self, user_id=None):
         pass
