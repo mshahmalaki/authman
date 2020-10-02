@@ -12,6 +12,8 @@ mg = Migrate()
 ma = Marshmallow()
 api = Api()
 
+from authman import model
+
 
 def create_app():
     app = Flask(__name__)
