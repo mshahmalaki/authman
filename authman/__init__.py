@@ -13,6 +13,7 @@ ma = Marshmallow()
 api = Api()
 
 from authman import model
+from authman import view
 
 
 def create_app():
