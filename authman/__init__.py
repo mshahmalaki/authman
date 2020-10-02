@@ -16,5 +16,10 @@ api = Api()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    db.init_app(app)
+    mg.init_app(app, db)
+    ma.init_app(app)
+    api.init_app(app)
     return app
 
