@@ -9,6 +9,6 @@ api.add_resource(
 )
 api.add_resource(
     UserResource,
-    "users/<int:user_id>",
+    "/users/<int:user_id>",
     methods=["GET", "PATCH", "DELETE"]
 )
