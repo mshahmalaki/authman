@@ -1,1 +1,1 @@
-from authman.config.config import *
+from authman.config.config import Config
