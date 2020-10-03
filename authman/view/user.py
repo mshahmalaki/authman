@@ -26,7 +26,9 @@ class UserResource(Resource):
         """
         PATCH /users/<user_id> --> Update user.
         """
-        pass
+        if user_id is None:
+            abort(405)
+        return UserController.update_user(user_id)
 
     def delete(self, user_id=None):
         """
