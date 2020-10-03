@@ -12,6 +12,16 @@ class UserController:
             "users": users_schema.dump(users)
         }
 
+    def get_user(user_id):
+        user= User.query.get(user_id)
+        if user is None:
+            abort(404)
+        else:
+            user_schema = UserSchema()
+            return {
+                "user": user_schema.dump(user)
+            }
+
     def create_user():
         if request.is_json:
             json_data = request.get_json()
@@ -20,6 +30,9 @@ class UserController:
                 data = user_schema.load(json_data)
             except:
                 abort(400)
+            user = User.query.filter_by(username=data["username"]).first()
+            if user is not None:
+                abort(409)
             user = User(username=data["username"], password=data["password"])
             db.session.add(user)
             db.session.commit()
