@@ -59,3 +59,11 @@ class UserController:
         return {
             "user": user_schema.dump(user)
         }
+
+    def delete_user(user_id):
+        user = User.query.get(user_id)
+        if user is None:
+            abort(404)
+        db.session.delete(user)
+        db.session.commit()
+        return {}, 204

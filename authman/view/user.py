@@ -34,4 +34,6 @@ class UserResource(Resource):
         """
         DELETE /users/<user_id> --> Delete user.
         """
-        pass
+        if user_id is None:
+            abort(405)
+        return UserController.delete_user(user_id)
