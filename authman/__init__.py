@@ -4,6 +4,7 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
+from healthcheck import HealthCheck
 
 from authman.config import Config
 
@@ -31,5 +32,8 @@ def create_app():
     ma.init_app(app)
     api.init_app(app)
     app.cli.add_command(app_cli)
-    return app
 
+    health = HealthCheck(app, "/status")
+    health.add_check(command.db_check)
+
+    return app
