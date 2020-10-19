@@ -1,0 +1,10 @@
+---
+
+- name: Testing app with command line commands
+  become: yes
+  hosts: workers
+  tasks:
+    
+    - name: Test db
+      shell: flask app test
+
