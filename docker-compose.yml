@@ -1,7 +1,15 @@
 version : "3.8"
+
 services:
+
+  watchtower:
+    image: v2tec/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -i 30
+
   webapp:
-    image: authman
+    image: devopstest2020/authman
     container_name: authman_api
     restart: unless-stopped
     expose:
@@ -15,6 +23,7 @@ services:
       AUTHMAN_DATABASE_URI: mysql+pymysql://authman:123456@db:3306/authman
     depends_on:
       - db
+
   db:
     image: mysql:latest
     container_name: authman_db
