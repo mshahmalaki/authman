@@ -1,16 +1,16 @@
-version : 3.8
-services: 
+version : "3.8"
+services:
   webapp:
     build: <image_name>:tag | .
     restart: unless-stopped
-    ports: 
+    ports:
       - "5000:5000"
       - "80:80"
     volumes:
       - .:/app
       - log_vol:/var/log
     networks:
-      - backend 
+      - backend
     env_file:
       - <env_file>
     command: bash -c "./entrypoint.sh"
@@ -25,11 +25,11 @@ services:
      MYSQL_ROOT_PASSWORD: somewordpress
      MYSQL_DATABASE: wordpress
      MYSQL_USER: wordpress
-     MYSQL_PASSWORD: wordpress 
+     MYSQL_PASSWORD: wordpress
 
 
 networks:
   backend
-volumes: 
+volumes:
   log_vol
   db_data
