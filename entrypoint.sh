@@ -1,6 +1,19 @@
-python manage.py makemigrations
-python manage.py migrate
-python manage.py collectstatic --noinput
-gunicorn "{subfolder}.{module_file}:app" -w 10 -b 0.0.0.0:5000 --daemon
-python manage.py runserver 0.0.0.0:80
+for i in {1..7}; do
+  flask app testdb > /dev/null
+  rc=$?
+  if [[ $rc -eq 0 ]]; then
+    break
+  fi
+  sleep 5
+done
 
+if [[ $rc -ne 0 ]]; then
+  echo "Service tests failed."
+  exit 1
+fi
+
+echo "Migration ..."
+flask db upgrade
+
+echo "Run server ..."
+flask run --host=0.0.0.0

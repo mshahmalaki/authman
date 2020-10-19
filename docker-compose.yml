@@ -1,35 +1,33 @@
 version : "3.8"
 services:
   webapp:
-    build: <image_name>:tag | .
+    build: .
+    container_name: authman_api
     restart: unless-stopped
+    expose:
+      - 5000
     ports:
-      - "5000:5000"
-      - "80:80"
-    volumes:
-      - .:/app
-      - log_vol:/var/log
+      - "80:5000"
     networks:
       - backend
-    env_file:
-      - <env_file>
-    command: bash -c "./entrypoint.sh"
+    environment:
+      FLASK_APP: authman
+      AUTHMAN_DATABASE_URI: mysql+pymysql://authman:123456@authman_db:3306/authman
     depends_on:
       - db
   db:
-   image: mysql:latest
-   volumes:
-     - db_data:/var/lib/mysql
-   restart: always
-   environment:
-     MYSQL_ROOT_PASSWORD: somewordpress
-     MYSQL_DATABASE: wordpress
-     MYSQL_USER: wordpress
-     MYSQL_PASSWORD: wordpress
-
+    image: mysql:latest
+    container_name: authman_db
+    restart: always
+    expose:
+      - 3306
+    networks:
+      - backend
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: authman
+      MYSQL_USER: authman
+      MYSQL_PASSWORD: 123456
 
 networks:
-  backend
-volumes:
-  log_vol
-  db_data
+  backend:
