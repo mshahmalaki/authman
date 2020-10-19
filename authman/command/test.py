@@ -5,16 +5,19 @@ from authman import app_cli, db
 @app_cli.command("testdb", help="Check Database Connections.")
 def app_cli_testdb():
     secho("Testing database connections...", nl=False)
+    (db_status, db_message) = db_check()
+    if db_status:
+        secho(db_message, fg="green")
+    else:
+        secho(db_message, fg="red")
+        exit(1)
+
+def db_check():
     try:
         result = db.engine.execute("select 1;").first()
         if result[0] == 1:
-            secho("SUCCESS", fg="green")
-            success = True
+            return True, "DB, SUCCESS!"
         else:
-            secho("BAD RESULT", fg="yellow")
-            success = False
+            return False, "DB, BAD RESULT"
     except:
-        secho("FAILED", fg="red")
-        success = False
-    if success is False:
-        exit(1)
+        return False, "DB, FAILED!"
