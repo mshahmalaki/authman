@@ -18,8 +18,7 @@ pipeline {
     stage("Build Image") {
       steps {
         script {
-          IMAGE_NAME = "${DOCKER_REGISTRY_URL}/authman"
-          DOCKER_IMAGE = docker.build(${IMAGE_NAME})
+          DOCKER_IMAGE = docker.build($IMAGE_NAME)
         }
       }
     }
