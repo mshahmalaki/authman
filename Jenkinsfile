@@ -6,7 +6,6 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: "5"))
   }
   parameters {
-    string(name: "IMAGE_NAME", defaultValue: "${DOCKER_REGISTRY_URL}/authman", description: "Docker image name")
     string(name: "MYSQL_TEST_DATABASE", defaultValue: "authman", description: "Name of mysql test container")
     password(name: "MYSQL_TEST_PASSWORD", defaultValue: "root", description: "MySQL test container root password")
   }
@@ -19,7 +18,8 @@ pipeline {
     stage("Build Image") {
       steps {
         script {
-          DOCKER_IMAGE = docker.build(params.IMAGE_NAME)
+          IMAGE_NAME = "${DOCKER_REGISTRY_URL}/authman"
+          DOCKER_IMAGE = docker.build(${IMAGE_NAME})
         }
       }
     }
