@@ -9,6 +9,8 @@ EXPOSE 5000
 #copy requirements for pip
 COPY requirements.txt .
 
+RUN sudo apt-get install build-essential libssl-dev libffi-dev python-dev
+
 #run the requirements
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
