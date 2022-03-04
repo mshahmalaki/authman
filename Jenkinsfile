@@ -65,7 +65,7 @@ pipeline {
         equals expected: 1, actual: currentBuild.number
       }
       steps {
-        ansiblePlaybook(inventory: 'scripts/deployment/inventory.ini', playbook: 'scripts/deployment/playbook.yaml')
+        // ansiblePlaybook(inventory: 'scripts/deployment/inventory.ini', playbook: 'scripts/deployment/playbook.yaml')
       }
     }
   }
