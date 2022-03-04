@@ -1,5 +1,7 @@
 FROM python:slim
 
+RUN apt update && apt install -y build-essential libssl-dev libffi-dev python-dev
+
 #define working directory
 WORKDIR /opt/app
 
@@ -8,8 +10,6 @@ EXPOSE 5000
 
 #copy requirements for pip
 COPY requirements.txt .
-
-RUN apt-get install build-essential libssl-dev libffi-dev python-dev
 
 #run the requirements
 RUN pip install --upgrade pip

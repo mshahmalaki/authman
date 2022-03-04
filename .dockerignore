@@ -3,3 +3,7 @@ venv
 .pytest_cache
 htmlcov
 .flaskenv
+Jenkinsfile
+.git
+jenkins/
+.gitignore
