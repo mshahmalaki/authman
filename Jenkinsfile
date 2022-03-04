@@ -18,7 +18,7 @@ pipeline {
     stage("Build Image") {
       steps {
         script {
-          DOCKER_IMAGE = docker.build(${IMAGE_NAME})
+          DOCKER_IMAGE = docker.build("$IMAGE_NAME")
         }
       }
     }
@@ -29,7 +29,7 @@ pipeline {
       steps {
         script {
           docker.image("mysql").withRun("-e MYSQL_ROOT_PASSWORD=$params.MYSQL_TEST_PASSWORD -e MYSQL_DATABASE=$params.MYSQL_TEST_DATABASE --name $MYSQL_DB_CONTAINER_NAME") { c ->
-            docker.image(${IMAGE_NAME}).inside("--link ${c.id} -e AUTHMAN_DATABASE_URI=mysql+pymysql://root:$params.MYSQL_TEST_PASSWORD@$MYSQL_DB_CONTAINER_NAME/$params.MYSQL_TEST_DATABASE") {
+            docker.image("$IMAGE_NAME").inside("--link ${c.id} -e AUTHMAN_DATABASE_URI=mysql+pymysql://root:$params.MYSQL_TEST_PASSWORD@$MYSQL_DB_CONTAINER_NAME/$params.MYSQL_TEST_DATABASE") {
               retry(100) {
                 sh "sleep 3"
                 sh "flask app testdb"
