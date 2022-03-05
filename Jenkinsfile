@@ -7,7 +7,7 @@ pipeline {
   }
   parameters {
     string(name: "MYSQL_TEST_DATABASE", defaultValue: "authman", description: "Name of mysql test container")
-    string(name: "MYSQL_TEST_PASSWORD", defaultValue: "root", description: "MySQL test container root password")
+    password(name: "MYSQL_TEST_PASSWORD", defaultValue: "root", description: "MySQL test container root password")
   }
   stages {
     stage("Load Conf"){
@@ -33,29 +33,31 @@ pipeline {
     }
     stage("Test") {
       environment {
-        MYSQL_DB_CONTAINER_NAME = "jenkins_mysql_${JOB_NAME}_${BUILD_ID}"
+        MYSQL_DB_CONTAINER_NAME = "mysql_${JOB_NAME}_${BUILD_ID}"
+        APP_CONTAINER_NAME = "authman_${JOB_NAME}_${BUILD_ID}"
       }
       steps {
         script {
-          docker.image("mysql").withRun("-e MYSQL_ROOT_PASSWORD=$params.MYSQL_TEST_PASSWORD -e MYSQL_DATABASE=$params.MYSQL_TEST_DATABASE --name $MYSQL_DB_CONTAINER_NAME") { c ->
-            docker.image("$DOCKER_REGISTRY_URL/authman:${gitCommit}").inside("--link ${c.id} -e AUTHMAN_DATABASE_URI=mysql+pymysql://root:$params.MYSQL_TEST_PASSWORD@$MYSQL_DB_CONTAINER_NAME/$params.MYSQL_TEST_DATABASE") {
-              retry(100) {
-                sh "sleep 3"
-                sh "flask app testdb"
-              }
-              sh "flask db upgrade"
-              sh "coverage run -m pytest"
-              sh "coverage html"
-              archiveArtifacts artifacts: "htmlcov/", fingerprint: true
-              publishHTML target: [
-                allowMissing: false,
-                alwaysLinkToLastBuild: false,
-                keepAll: true,
-                reportDir: "htmlcov",
-                reportFiles: "index.html",
-                reportName: "Code Coverage"
+          docker.image("mysql:${MYSQL_VERSION}").withRun("--name $MYSQL_DB_CONTAINER_NAME -e MYSQL_ROOT_PASSWORD=test -e MYSQL_DATABASE=testing") {
+            mysqlContainer -> 
+              authmanAppImage.inside("--name $APP_CONTAINER_NAME -e AUTHMAN_DATABASE_URI=mysql+pymysql://root:test@$MYSQL_DB_CONTAINER_NAME:3306/testing --link ${mysqlContainer.id}"){
+                retry(100){
+                  sh "sleep 3"
+                  sh "flask app testdb"
+                }
+                sh "flask db upgrade"
+                sh "coverage run -m pytest"
+                sh "coverage html"
+                archiveArtifacts artifacts: "htmlcov/", fingerprint: true
+                publishHTML target: [
+                  allowMissing: false,
+                  alwaysLinkToLastBuild: false,
+                  keepAll: true,
+                  reportDir: "htmlcov",
+                  reportFiles: "index.html",
+                  reportName: "Code Coverage"
                 ]
-            }
+              }
           }
         }
       }
