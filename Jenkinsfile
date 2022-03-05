@@ -12,7 +12,14 @@ pipeline {
   stages {
     stage("Load Conf"){
       steps{
-        load "jenkins/envs/${JOB_NAME}.groovy"
+        load "jenkins/${JOB_NAME}-config.groovy"
+        dir("jenkins/config"){
+          git (
+            url: "$CONFIG_GIT_URL",
+            credentialsId: "$CONFIG_GIT_CREDENTIAL"
+          )
+          load "config.groovy"
+        }
       }
     }
     stage("Build Image") {
