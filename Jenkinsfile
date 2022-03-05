@@ -5,10 +5,6 @@ pipeline {
     newContainerPerStage()
     buildDiscarder(logRotator(numToKeepStr: "5"))
   }
-  parameters {
-    string(name: "MYSQL_TEST_DATABASE", defaultValue: "authman", description: "Name of mysql test container")
-    password(name: "MYSQL_TEST_PASSWORD", defaultValue: "root", description: "MySQL test container root password")
-  }
   stages {
     stage("Load Conf"){
       steps{
