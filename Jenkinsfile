@@ -27,7 +27,7 @@ pipeline {
       steps {
         script {
           gitCommit = sh(script: "git rev-parse HEAD | cut -c1-8", returnStdout: true).trim()
-          authmanAppImage = docker.build("$IMAGE_NAME:${gitCommit}")
+          authmanAppImage = docker.build("$DOCKER_REGISTRY_URL/authman:${gitCommit}")
         }
       }
     }
@@ -38,7 +38,7 @@ pipeline {
       steps {
         script {
           docker.image("mysql").withRun("-e MYSQL_ROOT_PASSWORD=$params.MYSQL_TEST_PASSWORD -e MYSQL_DATABASE=$params.MYSQL_TEST_DATABASE --name $MYSQL_DB_CONTAINER_NAME") { c ->
-            docker.image("$IMAGE_NAME").inside("--link ${c.id} -e AUTHMAN_DATABASE_URI=mysql+pymysql://root:$params.MYSQL_TEST_PASSWORD@$MYSQL_DB_CONTAINER_NAME/$params.MYSQL_TEST_DATABASE") {
+            docker.image("$DOCKER_REGISTRY_URL/authman:${gitCommit}").inside("--link ${c.id} -e AUTHMAN_DATABASE_URI=mysql+pymysql://root:$params.MYSQL_TEST_PASSWORD@$MYSQL_DB_CONTAINER_NAME/$params.MYSQL_TEST_DATABASE") {
               retry(100) {
                 sh "sleep 3"
                 sh "flask app testdb"
