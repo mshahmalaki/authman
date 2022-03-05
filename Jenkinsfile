@@ -18,7 +18,8 @@ pipeline {
     stage("Build Image") {
       steps {
         script {
-          DOCKER_IMAGE = docker.build("$IMAGE_NAME")
+          gitCommit = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+          authmanAppImage = docker.build("$IMAGE_NAME:${gitCommit}")
         }
       }
     }
@@ -55,7 +56,7 @@ pipeline {
       steps {
         script {
           docker.withRegistry("", "dockerhub") {
-            DOCKER_IMAGE.push()
+            authmanAppImage.push()
           }
         }
       }
