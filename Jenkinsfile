@@ -16,6 +16,7 @@ pipeline {
         dir("jenkins/config"){
           git (
             url: "$CONFIG_GIT_URL",
+            branch: "main"
             credentialsId: "$CONFIG_GIT_CREDENTIAL"
           )
           load "config.groovy"
