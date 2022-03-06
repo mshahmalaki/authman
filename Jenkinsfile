@@ -22,7 +22,7 @@ pipeline {
     stage("Build Image") {
       steps {
         script {
-          gitCommit = sh(script: "git rev-parse HEAD | cut -c1-8", returnStdout: true).trim()
+          gitCommit = sh(script: "git rev-parse HEAD | cut -c1-7", returnStdout: true).trim()
           authmanAppImage = docker.build("${DOCKER_REGISTRY_ADDRESS}/authman:${gitCommit}")
         }
       }
