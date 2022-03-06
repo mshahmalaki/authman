@@ -1,22 +1,26 @@
 FROM python:3.8.12-slim-bullseye
 
-RUN apt-get update && apt-get install -y build-essential libssl-dev libffi-dev python-dev
+# RUN apt-get update && apt-get install -y build-essential libssl-dev libffi-dev python-dev
 
-#define working directory
-WORKDIR /opt/app
+# Define user and switch
+RUN adduser -D myuser
+USER myuser
 
-#exposing ports in container
+# Define working directory
+WORKDIR /home/myuser
+
+# Exposing ports in container
 EXPOSE 5000
 
-#copy requirements for pip
-COPY requirements.txt .
+# Copy requirements for pip
+COPY --chown=myuser:myuser requirements.txt .
 
-#run the requirements
+# Run the requirements
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --user -r requirements.txt
 
-#copy source code in container
-COPY . .
+# Copy source code in container
+COPY --chown=myuser:myuser . .
 
-#run the python server
+# Run the python server
 CMD ./entrypoint.sh
