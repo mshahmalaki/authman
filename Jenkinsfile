@@ -79,14 +79,5 @@ pipeline {
         }
       }
     }
-    stage("First time Deployment") {
-      when {
-        equals expected: 1, actual: currentBuild.number
-      }
-      steps {
-        echo 'Deploy'
-        // ansiblePlaybook(inventory: 'scripts/deployment/inventory.ini', playbook: 'scripts/deployment/playbook.yaml')
-      }
-    }
   }
 }
