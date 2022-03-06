@@ -16,7 +16,7 @@ EXPOSE 5000
 COPY --chown=myuser:myuser requirements.txt .
 
 # Run the requirements
-RUN pip install --upgrade pip
+RUN pip install --no-warn-script-location --upgrade pip
 RUN pip install --user -r requirements.txt
 
 # Copy source code in container
