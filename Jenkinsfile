@@ -66,7 +66,7 @@ pipeline {
         script {
             authmanAppImage.push()
             authmanAppImage.push("latest")
-            gitTag = sh(script: "git tag --point-at HEAD", returnStdout: true).trim()
+            gitTag = sh(script: "git tag --points-at HEAD", returnStdout: true).trim()
             if (gitTag !="") {
               gitTag = gitTag.minus("v")
               appVersionMajor = gitTag.split("\\.")[0]
