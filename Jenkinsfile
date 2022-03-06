@@ -64,9 +64,18 @@ pipeline {
     stage("Push Image") {
       steps {
         script {
-          docker.withRegistry("", "dockerhub") {
             authmanAppImage.push()
-          }
+            authmanAppImage.push("latest")
+            gitTag = sh(script: "git tag --point-at HEAD", returnStdout: true).trim()
+            if (gitTag !="") {
+              gitTag = gitTag.minus("v")
+              appVersionMajor = gitTag.split("\\.")[0]
+              appVersionMinor = gitTag.split("\\.")[0] + "." + gitTag.split("\\.")[1]
+              appVersionPatch = gitTag.split("\\.")[0] + "." + gitTag.split("\\.")[1] + "." + gitTag.split("\\.")[2]
+              authmanAppImage.push(appVersionMajor)
+              authmanAppImage.push(appVersionMinor)
+              authmanAppImage.push(appVersionPatch)
+            }
         }
       }
     }
