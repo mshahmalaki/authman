@@ -52,6 +52,10 @@ pipeline {
                 reportFiles: "index.html",
                 reportName: "Code Coverage"
               ]
+              sh "coverage xml"
+              cobertura (
+                coberturaReportFile: "coverage.xml"
+              )
             }
           }
         }
