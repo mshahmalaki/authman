@@ -37,7 +37,7 @@ pipeline {
           docker.image("mysql:${MYSQL_VERSION}").withRun("--name $MYSQL_DB_CONTAINER_NAME -e MYSQL_ROOT_PASSWORD=test -e MYSQL_DATABASE=testing") {
             mysqlContainer -> authmanAppImage.inside("--name $APP_CONTAINER_NAME -e FLASK_APP=authman -e FLASK_ENV=testing -e FLASK_DEBUG=1 -e AUTHMAN_DATABASE_URI=mysql+pymysql://root:test@$MYSQL_DB_CONTAINER_NAME:3306/testing --link ${mysqlContainer.id}"){
               retry(100){
-                sh "sleep 3"
+                sh "sleep 5"
                 sh "flask app testdb"
               }
               sh "flask db upgrade"
