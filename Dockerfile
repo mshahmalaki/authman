@@ -1,4 +1,4 @@
-FROM python:3.10.2-bullseye
+FROM python:3.10.2-slim-bullseye
 
 RUN apt-get update && apt-get install -y build-essential libssl-dev libffi-dev python-dev
 
