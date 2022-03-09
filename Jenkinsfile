@@ -5,6 +5,9 @@ pipeline {
     newContainerPerStage()
     buildDiscarder(logRotator(numToKeepStr: "5"))
   }
+  triggers {
+    pollSCM 'H/15 * * * *'
+  }
   stages {
     stage("Load Conf"){
       steps{
