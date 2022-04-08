@@ -1,17 +1,17 @@
 pipeline {
   agent any
   options {
-    disableResume()
-    newContainerPerStage()
-    buildDiscarder(logRotator(numToKeepStr: "5"))
+    disableResume() // Do not allow the pipeline to resume if the controller restarts.
+    newContainerPerStage()  // Used with docker or dockerfile top-level agent. When specified, each stage will run in a new container instance on the same node, rather than all stages running in the same container instance.
+    buildDiscarder(logRotator(numToKeepStr: "5")) // Keep 5 last build
   }
   triggers {
-    pollSCM 'H/15 * * * *'
+    pollSCM 'H/15 * * * *'  // Check git for last changes every 15 miuntes
   }
   stages {
     stage("Load Conf"){
       steps{
-        load "jenkins/${JOB_NAME}-config.groovy"
+        load "jenkins/${JOB_NAME}-config.groovy" // Load some ENVs such as CONFIG_GIT_URL, CONFIG_GIT_CREDENTIAL and MYSQL_VERSION
         dir("jenkins/config"){
           git (
             url: "$CONFIG_GIT_URL",
